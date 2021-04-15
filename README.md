@@ -6,3 +6,5 @@ This is a simple utility I have written according to our needs in N.E.U. Meram M
 It basically accepts a predefined number of questions via separate fields (fitted for fast copy-paste operation from e.g. a word file). Formulas and other mathematical support is over LaTeX support. Currently, adding a single .png or .jpg figure to the question body is possible. In the future, figure support for multiple-choice answers is planned.
 
 Figures are encoded to BASE64 and suitably embedded to the destination Moodle XML file, which is typically generated after all questions are prepared.
+
+I wrote it fast for a quick need during pandemic conditions so it is currently in Turkish, but I have plans to provide English and French support in the following weeks.
