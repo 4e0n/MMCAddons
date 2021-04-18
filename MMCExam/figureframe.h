@@ -1,5 +1,5 @@
 /*
-MMCUtil - Moodle Multiple Choice Exam Question Set Arranger Utility
+MMCExam - Moodle Multiple Choice Exam Question Set Arranger Utility
    Copyright (C) 2021 Barkin Ilhan
    N.E.U. Meram Medical Faculty Biophysics Department
    Computational Cognitive Neuroscience Laboratory

@@ -1,6 +1,5 @@
-
 /*
-MMCUtil - Moodle Multiple Choice Exam Question Set Arranger Utility
+MMCExam - Moodle Multiple Choice Exam Question Set Arranger Utility
    Copyright (C) 2021 Barkin Ilhan
    N.E.U. Meram Medical Faculty Biophysics Department
    Computational Cognitive Neuroscience Laboratory
@@ -20,10 +19,12 @@ MMCUtil - Moodle Multiple Choice Exam Question Set Arranger Utility
  Repo:    https://github.com/4e0n/
 */
 
-#ifndef MMCUTIL_H
-#define MMCUTIL_H
+#ifndef MMCEXAM_H
+#define MMCEXAM_H
 
 #include <QtGui>
+#include "lineedit.h"
+#include "textedit.h"
 #include "figureframe.h"
 
 const int APP_WIDTH=1000;
@@ -41,10 +42,10 @@ struct Question {
  QString xml;
 };
 
-class MMCUtil : public QWidget {
+class MMCExam : public QWidget {
  Q_OBJECT
  public:
-  MMCUtil(QWidget *p=0) : QWidget(0) {
+  MMCExam(QWidget *p=0) : QWidget(0) {
    setGeometry(5,30,APP_WIDTH,APP_HEIGHT);
    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
    
@@ -60,9 +61,9 @@ class MMCUtil : public QWidget {
    for (int i=0;i<question.size();i++) { question[i].choice.resize(5); resetQuestion(i); }
 
    populateDepts();
-	  
+
    // -----
-   
+ 
    setWindowTitle(tr("Moodle XML soru setí oluşturma aracı v0.5 - (c) 2021 GPLv3 Barkın İlhan (barkin@unrlabs.org) - NEÜ MTF Biyofizik AD"));
    statusBar=new QStatusBar(this); statusBar->setGeometry(0,APP_HEIGHT-20,APP_WIDTH,20);
    statusBar->show(); statusBar->showMessage(tr("Hazır."));
@@ -78,15 +79,15 @@ class MMCUtil : public QWidget {
    deptLabel->setGeometry(160,20,90,20); deptLabel->show();
    deptCB=new QComboBox(this);
    for (int i=0;i<deptNames.size();i++) deptCB->addItem(deptNames[i]);
-   deptCB->setGeometry(250,20,150,20); deptCB->show();
+   deptCB->setGeometry(250,20,150,20); deptCB->show(); curDept=0;
    
    QLabel* tagLabel=new QLabel(tr("Rumuz:"),this);
    tagLabel->setGeometry(420,20,50,20); tagLabel->show();
-   tagLE=new QLineEdit(this); tagLE->setGeometry(470,20,150,20); tagLE->show();
+   tagLE=new LineEdit(this); tagLE->setGeometry(470,20,150,20); tagLE->show();
    
    QLabel* bodyLabel=new QLabel(tr("Soru gövdesi:"),this);
    bodyLabel->setGeometry(10,60,80,20); bodyLabel->show();
-   bodyTE=new QTextEdit(this); bodyTE->setGeometry(10,90,510,100); bodyTE->show();
+   bodyTE=new TextEdit(this); bodyTE->setGeometry(10,90,510,100); bodyTE->show();
    
    bodyFigLoadButton=new QPushButton(tr("Şekil\n(PNG/JPG)\nyükle..."),this);
    bodyFigLoadButton->setGeometry(530,80,90,50);
@@ -94,29 +95,27 @@ class MMCUtil : public QWidget {
    
    figFrame=new FigureFrame(this,530,140,90,90); figFrame->show();
    
-   QTextEdit *choiceTE; choiceBG=new QButtonGroup(this); 
+   TextEdit *choiceTE; choiceBG=new QButtonGroup(this); 
    QLabel* choicesLabel=new QLabel(tr("Seçenekler:"),this);
    choicesLabel->setGeometry(10,210,60,20); choicesLabel->show();
-   choiceTE=new QTextEdit(this); choiceTE->setGeometry(50,240,560,40); choiceTE->show(); choices.append(choiceTE);
+   choiceTE=new TextEdit(this); choiceTE->setGeometry(50,240,560,40); choiceTE->show(); choices.append(choiceTE);
    choiceRB=new QRadioButton(this); choiceRB->setGeometry(30,250,20,20); choiceBG->addButton(choiceRB,1);
-   choiceTE=new QTextEdit(this); choiceTE->setGeometry(50,290,560,40); choiceTE->show(); choices.append(choiceTE);
+   choiceTE=new TextEdit(this); choiceTE->setGeometry(50,290,560,40); choiceTE->show(); choices.append(choiceTE);
    choiceRB=new QRadioButton(this); choiceRB->setGeometry(30,300,20,20); choiceBG->addButton(choiceRB,2);
-   choiceTE=new QTextEdit(this); choiceTE->setGeometry(50,340,560,40); choiceTE->show(); choices.append(choiceTE);
+   choiceTE=new TextEdit(this); choiceTE->setGeometry(50,340,560,40); choiceTE->show(); choices.append(choiceTE);
    choiceRB=new QRadioButton(this); choiceRB->setGeometry(30,350,20,20); choiceBG->addButton(choiceRB,3);
-   choiceTE=new QTextEdit(this); choiceTE->setGeometry(50,390,560,40); choiceTE->show(); choices.append(choiceTE);
+   choiceTE=new TextEdit(this); choiceTE->setGeometry(50,390,560,40); choiceTE->show(); choices.append(choiceTE);
    choiceRB=new QRadioButton(this); choiceRB->setGeometry(30,400,20,20); choiceBG->addButton(choiceRB,4);
-   choiceTE=new QTextEdit(this); choiceTE->setGeometry(50,440,560,40); choiceTE->show(); choices.append(choiceTE);
+   choiceTE=new TextEdit(this); choiceTE->setGeometry(50,440,560,40); choiceTE->show(); choices.append(choiceTE);
    choiceRB=new QRadioButton(this); choiceRB->setGeometry(30,450,20,20); choiceBG->addButton(choiceRB,5);
    
    QLabel* xmlLabel=new QLabel(tr("Moodle XML Çıktısı:"),this);
    xmlLabel->setGeometry(630,10,140,20); xmlLabel->show();
-   xmlTE=new QTextEdit(this); xmlTE->setGeometry(630,40,350,450); xmlTE->show();
+   xmlTE=new TextEdit(this); xmlTE->setGeometry(630,40,350,450); xmlTE->show();
    
    // -----
    
    prevIndex=-1; qSelectCB->setCurrentIndex(0);
-   
-   
    
    clearButton=new QPushButton(tr("Temizle"),this);
    clearButton->setGeometry(140,APP_HEIGHT-54,120,40);
@@ -147,7 +146,7 @@ class MMCUtil : public QWidget {
   
   void selectQuestionSlot(int q) {
    if (prevIndex>=0 && prevIndex!=q) { // Write old
-    question[prevIndex].dept=deptCB->currentIndex();
+    curDept=question[prevIndex].dept=deptCB->currentIndex();
     question[prevIndex].tag=tagLE->text();
     question[prevIndex].body=bodyTE->toPlainText();
     question[prevIndex].choice[0]=choices[0]->toPlainText();
@@ -160,6 +159,7 @@ class MMCUtil : public QWidget {
    }
    // Set new
    deptCB->setCurrentIndex(question[q].dept);
+   if (deptCB->currentIndex()==0) deptCB->setCurrentIndex(curDept);
    tagLE->setText(question[q].tag);
    bodyTE->clear(); bodyTE->insertPlainText(question[q].body);
    choices[0]->clear(); choices[0]->insertPlainText(question[q].choice[0]);
@@ -195,6 +195,18 @@ class MMCUtil : public QWidget {
   }
   
   void xmlSaveSlot() {
+   int q=qSelectCB->currentIndex();
+   curDept=question[q].dept=deptCB->currentIndex();
+   question[q].tag=tagLE->text();
+   question[q].body=bodyTE->toPlainText();
+   question[q].choice[0]=choices[0]->toPlainText();
+   question[q].choice[1]=choices[1]->toPlainText();
+   question[q].choice[2]=choices[2]->toPlainText();
+   question[q].choice[3]=choices[3]->toPlainText();
+   question[q].choice[4]=choices[4]->toPlainText();
+   if (choiceBG->checkedId()>0) question[prevIndex].correctAnswer=choiceBG->checkedId()-1;
+   question[q].xml=xmlTE->toPlainText();
+
    QString fileName=QFileDialog::getSaveFileName(this,tr("XML kaydet..."),
                                                  "./sorular.xml", tr("XML Files (*.xml)"));
    QFile xmlFile(fileName);
@@ -300,6 +312,7 @@ class MMCUtil : public QWidget {
   }
 
   void populateDepts() {
+   deptNames.append(tr("SECILMEDI!"));
    deptNames.append(tr("Akademik Okuryazarlık"));
    deptNames.append(tr("Anatomi"));
    deptNames.append(tr("Biyofizik"));
@@ -326,15 +339,18 @@ class MMCUtil : public QWidget {
    deptNames.append(tr("Tıp Tarihi ve Etik"));
   }
 
+
+  int curDept;
+
   QVector<QString> deptNames;
   QVector<Question> question; int prevIndex,questionCount;
   
-  QComboBox *qSelectCB,*deptCB; QLineEdit *tagLE; QButtonGroup *choiceBG; 
-  QTextEdit *bodyTE,*xmlTE;
+  QComboBox *qSelectCB,*deptCB; LineEdit *tagLE; QButtonGroup *choiceBG; 
+  TextEdit *bodyTE,*xmlTE;
   
   FigureFrame* figFrame;
   
-  QRadioButton *choiceRB; QVector<QTextEdit*> choices;
+  QRadioButton *choiceRB; QVector<TextEdit*> choices;
   
   QPushButton *xmlSaveButton,*clearButton,*bodyFigLoadButton,*generateButton,*quitButton;
   QStatusBar *statusBar;

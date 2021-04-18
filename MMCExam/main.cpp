@@ -1,5 +1,5 @@
 /*
-MMCUtil - Moodle Multiple Choice Exam Question Set Arranger Utility
+MMCExam - Moodle Multiple Choice Exam Question Set Arranger Utility
    Copyright (C) 2021 Barkin Ilhan
    N.E.U. Meram Medical Faculty Biophysics Department
    Computational Cognitive Neuroscience Laboratory
@@ -22,10 +22,10 @@ MMCUtil - Moodle Multiple Choice Exam Question Set Arranger Utility
 #include <QApplication>
 #include <QTextCodec>
 #include <QStringList>
-#include "mmcutil.h"
+#include "mmcexam.h"
 
 int main(int argc,char *argv[]) {
  QApplication app(argc,argv);
- MMCUtil mmcUtil;
+ MMCExam mmcExam;
  return app.exec();
 }
